@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
         {
             minimax(board, &my_move, DEPTH, DEPTH, -oo, oo, true);
             board.make_move(my_move, self);
+            // cerr << "AI: " << my_move << endl;
             cerr << my_move << endl;
             board.print();
         }
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
         if (status != 1)
             return status;
 
+        // cerr << "You: ";
         cin >> opponent_move;
         board.make_move(opponent_move, opponent);
         is_first = true;
