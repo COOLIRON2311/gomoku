@@ -281,54 +281,75 @@ bool defend_against_4_in_a_row(Board &b, string *best_move)
         {opponent, _empty, opponent, opponent, opponent},
         {_empty, opponent, opponent, opponent, opponent}};
 
-
     for (int i = 0; i < 15; i++)
+    {
+        array<cell, 5> row;
+        array<cell, 5> col;
+        for (int j = 0; j < 15 - 4; j++)
         {
-            array<cell, 5> row;
-            array<cell, 5> col;
-            for (int j = 0; j < 15 - 4; j++)
+            for (int k = 0; k < 5; k++)
+            {
+                row[k] = b(i, j + k);
+                col[k] = b(j + k, i);
+            }
+            if (patterns.find(row) != patterns.end())
             {
                 for (int k = 0; k < 5; k++)
                 {
-                    row[k] = b(i, j + k);
-                    col[k] = b(j + k, i);
-                }
-                if (patterns.find(row) != patterns.end())
-                {
-                    for (int k = 0; k < 5; k++)
+                    if (row[k] == _empty)
                     {
-                        if (row[k] == _empty)
-                        {
-                            *best_move = Board::idx2str(j + k, i);
-                            return true;
-                        }
+                        *best_move = Board::idx2str(j + k, i);
+                        return true;
+                    }
+                }
+            }
+            if (patterns.find(col) != patterns.end())
+            {
+                for (int k = 0; k < 5; k++)
+                {
+                    if (col[k] == _empty)
+                    {
+                        *best_move = Board::idx2str(i, j + k);
+                        return true;
                     }
                 }
             }
         }
-        for (int i = 0; i < 15 - 4; i++)
+    }
+    for (int i = 0; i < 15 - 4; i++)
+    {
+        for (int j = 0; j < 15 - 4; j++)
         {
-            for (int j = 0; j < 15 - 4; j++)
+            array<cell, 5> diag1;
+            array<cell, 5> diag2;
+            for (int k = 0; k < 5; k++)
             {
-                array<cell, 5> diag1;
-                array<cell, 5> diag2;
+                diag1[k] = b(i + k, j + k);
+                diag2[k] = b(i + k, j + 4 - k);
+            }
+            if (patterns.find(diag1) != patterns.end())
+            {
                 for (int k = 0; k < 5; k++)
                 {
-                    diag1[k] = b(i + k, j + k);
-                    diag2[k] = b(i + k, j + 4 - k);
-                }
-                if (patterns.find(diag1) != patterns.end())
-                {
-                    for (int k = 0; k < 5; k++)
+                    if (diag1[k] == _empty)
                     {
-                        if (diag1[k] == _empty)
-                        {
-                            *best_move = Board::idx2str(j + k, i + k);
-                            return true;
-                        }
+                        *best_move = Board::idx2str(j + k, i + k);
+                        return true;
+                    }
+                }
+            }
+            if (patterns.find(diag2) != patterns.end())
+            {
+                for (int k = 0; k < 5; k++)
+                {
+                    if (diag2[k] == _empty)
+                    {
+                        *best_move = Board::idx2str(j + 4 - k, i + k);
+                        return true;
                     }
                 }
             }
         }
-        return false;
+    }
+    return false;
 }

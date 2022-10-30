@@ -1,5 +1,5 @@
-# OFLAGS=-O3 -march=native
-OFLAGS=-O0 -g
+OFLAGS=-O3 -march=native
+# OFLAGS=-O0 -g
 all: build run
 
 build:
