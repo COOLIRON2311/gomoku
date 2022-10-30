@@ -16,6 +16,12 @@ int main(int argc, char *argv[])
     {
         if (is_first)
         {
+            if (defend_against_4_in_a_row(board, &my_move))
+            { // if we can defend against 4 in a row, do it
+                board.make_move(my_move, self);
+                cout << my_move << endl;
+                continue;
+            }
             minimax(board, &my_move, DEPTH, DEPTH, -oo, oo, true);
             board.make_move(my_move, self);
             // cerr << "AI: " << my_move << endl;
