@@ -33,8 +33,11 @@ public:
     }
     void print() const
     {
+        cout << "     a b c d e f g h i j k l m n o" << endl;
+        cout << "    ------------------------------" << endl;
         for (int i = 0; i < 15; i++)
         {
+            cout << 15 - i << ( 15 - i < 10 ? "  | " : " | ");
             for (int j = 0; j < 15; j++)
                 if (board[i][j] == _empty)
                     cerr << ". ";
@@ -59,9 +62,9 @@ public:
         int col = move[0] - 'a';
         return {row, col};
     }
-    static string idx2str(int row, int col)
+    static string idx2str(int col, int row)
     {
-        return string(1, 'a' + row) + to_string(15 - col);
+        return string(1, 'a' + col) + to_string(15 - row);
     }
     inline bool is_valid_move(int col, int row)
     {
@@ -82,9 +85,6 @@ public:
     }
     int _analize_chunk(const array<cell, 5> &chunk) const
     {
-        if (chunk.size() < 5)
-            return 0;
-
         int score = 0;
         int free = 0;
         int selfs = 0;
@@ -216,7 +216,9 @@ public:
 int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int beta, bool isMax)
 {
     if (depth == 0)
+    {
         return b.heuristic();
+    }
 
     if (isMax)
     {
@@ -228,7 +230,7 @@ int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int b
                 if (b(i, j) == _empty)
                 {
                     b(i, j) = self; // make move
-                    int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, false);
+                    int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isMax);
                     b(i, j) = _empty; // undo move
                     if (value > best)
                     {
@@ -254,7 +256,7 @@ int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int b
                 if (b(i, j) == _empty)
                 {
                     b(i, j) = opponent;
-                    int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, true);
+                    int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isMax);
                     b(i, j) = _empty;
                     if (value < best)
                     {
