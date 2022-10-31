@@ -70,7 +70,7 @@ public:
     {
         return col >= 0 && col < 15 && row >= 0 && row < 15 && board[col][row] == _empty;
     }
-    bool _is_a_win(const array<cell, 5> &v) const
+    cell _is_a_win(const array<cell, 5> &v) const
     {
         int self_count = 0;
         int opponent_count = 0;
@@ -81,7 +81,11 @@ public:
             else if (v[i] == opponent)
                 opponent_count++;
         }
-        return self_count == 5 || opponent_count == 5;
+        if (self_count == 5)
+            return self;
+        if (opponent_count == 5)
+            return opponent;
+        return 0;
     }
     int _analize_chunk(const array<cell, 5> &chunk) const
     {
@@ -199,10 +203,12 @@ public:
                     row[k] = board[i][j + k];
                     col[k] = board[j + k][i];
                 }
-                if (_is_a_win(row))
-                    return board[i][j] == self ? 0 : 3;
-                if (_is_a_win(col))
-                    return board[j][i] == self ? 0 : 3;
+                cell win1 = _is_a_win(row);
+                cell win2 = _is_a_win(col);
+                if (win1 == self || win2 == self)
+                    return 0;
+                if (win1 == opponent || win2 == opponent)
+                    return 3;
             }
         }
 
@@ -217,10 +223,12 @@ public:
                     diag1[k] = board[i + k][j + k];
                     diag2[k] = board[i + k][j + 4 - k];
                 }
-                if (_is_a_win(diag1))
-                    return board[i][j] == self ? 0 : 3;
-                if (_is_a_win(diag2))
-                    return board[i][j + 4] == self ? 0 : 3;
+                cell win1 = _is_a_win(diag1);
+                cell win2 = _is_a_win(diag2);
+                if (win1 == self || win2 == self)
+                    return 0;
+                if (win1 == opponent || win2 == opponent)
+                    return 3;
             }
         }
 
