@@ -37,7 +37,7 @@ public:
         cout << "    ------------------------------" << endl;
         for (int i = 0; i < 15; i++)
         {
-            cout << 15 - i << ( 15 - i < 10 ? "  | " : " | ");
+            cout << 15 - i << (15 - i < 10 ? "  | " : " | ");
             for (int j = 0; j < 15; j++)
                 if (board[i][j] == _empty)
                     cout << ". ";
@@ -144,18 +144,42 @@ public:
                 count += _analize_chunk(col);
             }
         }
+        // for (int i = 0; i < 15 - 4; i++)
+        // {
+        //     for (int j = 0; j < 15 - 4; j++)
+        //     {
+        //         array<cell, 5> diag1;
+        //         array<cell, 5> diag2;
+        //         for (int k = 0; k < 5; k++)
+        //         {
+        //             diag1[k] = board[i + k][j + k];
+        //             diag2[k] = board[i + k][j + 4 - k];
+        //         }
+        //         count += _analize_chunk(diag1);
+        //         count += _analize_chunk(diag2);
+        //     }
+        // }
         for (int i = 0; i < 15 - 4; i++)
         {
-            for (int j = 0; j < 15 - 4; j++)
+            for (int j = 0; j < 5; j++)
             {
                 array<cell, 5> diag1;
-                array<cell, 5> diag2;
                 for (int k = 0; k < 5; k++)
                 {
                     diag1[k] = board[i + k][j + k];
-                    diag2[k] = board[i + k][j + 4 - k];
                 }
                 count += _analize_chunk(diag1);
+            }
+        }
+        for (int i = 0; i < 15 - 4; i++)
+        {
+            for (int j = 15 - 1; j >= 4; j--)
+            {
+                array<cell, 5> diag2;
+                for (int k = 0; k < 5; k++)
+                {
+                    diag2[k] = board[i + k][j - k];
+                }
                 count += _analize_chunk(diag2);
             }
         }
@@ -214,9 +238,9 @@ public:
             board[row][col] = player;
         }
     }
-    inline void test_move(int i, int j, cell player)
+    inline void test_move(int i, int j, bool isAI)
     {
-        board[i][j] = player;
+        board[i][j] = isAI ? self : opponent;
     }
     inline void undo_move(int i, int j)
     {
@@ -229,9 +253,9 @@ int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int b
     if (depth == 0)
     {
         if (isAI)
-            return -b.heuristic();
-        else
             return b.heuristic();
+        else
+            return -b.heuristic();
     }
 
     if (isAI)
@@ -243,7 +267,7 @@ int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int b
             { // col
                 if (b(i, j) == _empty)
                 {
-                    b.test_move(i, j, opponent); // make move
+                    b.test_move(i, j, isAI); // make move
                     int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isAI);
                     b.undo_move(i, j); // undo move
                     if (value > best)
@@ -269,7 +293,7 @@ int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int b
             {
                 if (b(i, j) == _empty)
                 {
-                    b.test_move(i, j, self);
+                    b.test_move(i, j, isAI);
                     int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isAI);
                     b.undo_move(i, j);
                     if (value < best)
