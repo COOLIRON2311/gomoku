@@ -113,7 +113,10 @@ public:
             score += 100;
 
         else if (selfs == 1 && free == 4)
-            score += 50;
+            score += 10;
+
+        else if (opponents == 3 && free == 2)
+            score -= 200;
 
         else if (opponents == 4 && free == 1)
             score -= 500;
@@ -211,13 +214,24 @@ public:
             board[row][col] = player;
         }
     }
+    inline void test_move(int i, int j, cell player)
+    {
+        board[i][j] = player;
+    }
+    inline void undo_move(int i, int j)
+    {
+        board[i][j] = _empty;
+    }
 };
 
 int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int beta, bool isAI)
 {
     if (depth == 0)
     {
-        return b.heuristic();
+        if (isAI)
+            return -b.heuristic();
+        else
+            return b.heuristic();
     }
 
     if (isAI)
@@ -229,9 +243,9 @@ int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int b
             { // col
                 if (b(i, j) == _empty)
                 {
-                    b(i, j) = opponent; // make move
+                    b.test_move(i, j, opponent); // make move
                     int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isAI);
-                    b(i, j) = _empty; // undo move
+                    b.undo_move(i, j); // undo move
                     if (value > best)
                     {
                         best = value;
@@ -255,9 +269,9 @@ int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int b
             {
                 if (b(i, j) == _empty)
                 {
-                    b(i, j) = self;
+                    b.test_move(i, j, self);
                     int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isAI);
-                    b(i, j) = _empty;
+                    b.undo_move(i, j);
                     if (value < best)
                     {
                         best = value;
