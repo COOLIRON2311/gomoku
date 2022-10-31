@@ -40,12 +40,12 @@ public:
             cout << 15 - i << ( 15 - i < 10 ? "  | " : " | ");
             for (int j = 0; j < 15; j++)
                 if (board[i][j] == _empty)
-                    cerr << ". ";
+                    cout << ". ";
                 else if (board[i][j] == self)
-                    cerr << "X ";
+                    cout << "X ";
                 else
-                    cerr << "O ";
-            cerr << endl;
+                    cout << "O ";
+            cout << endl;
         }
     }
     inline cell operator()(int i, int j) const
@@ -113,7 +113,7 @@ public:
             score += 100;
 
         else if (selfs == 1 && free == 4)
-            score += 10;
+            score += 50;
 
         else if (opponents == 4 && free == 1)
             score -= 500;
@@ -213,14 +213,14 @@ public:
     }
 };
 
-int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int beta, bool isMax)
+int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int beta, bool isAI)
 {
     if (depth == 0)
     {
         return b.heuristic();
     }
 
-    if (isMax)
+    if (isAI)
     {
         int best = -oo;
         for (int i = 0; i < 15; i++) // check all possible moves
@@ -229,8 +229,8 @@ int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int b
             { // col
                 if (b(i, j) == _empty)
                 {
-                    b(i, j) = self; // make move
-                    int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isMax);
+                    b(i, j) = opponent; // make move
+                    int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isAI);
                     b(i, j) = _empty; // undo move
                     if (value > best)
                     {
@@ -255,8 +255,8 @@ int minimax(Board &b, string *best_move, int depth, int _depth, int alpha, int b
             {
                 if (b(i, j) == _empty)
                 {
-                    b(i, j) = opponent;
-                    int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isMax);
+                    b(i, j) = self;
+                    int value = minimax(b, best_move, depth - 1, _depth, alpha, beta, !isAI);
                     b(i, j) = _empty;
                     if (value < best)
                     {
