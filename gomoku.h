@@ -148,42 +148,18 @@ public:
                 count += _analize_chunk(col);
             }
         }
-        // for (int i = 0; i < 15 - 4; i++)
-        // {
-        //     for (int j = 0; j < 15 - 4; j++)
-        //     {
-        //         array<cell, 5> diag1;
-        //         array<cell, 5> diag2;
-        //         for (int k = 0; k < 5; k++)
-        //         {
-        //             diag1[k] = board[i + k][j + k];
-        //             diag2[k] = board[i + k][j + 4 - k];
-        //         }
-        //         count += _analize_chunk(diag1);
-        //         count += _analize_chunk(diag2);
-        //     }
-        // }
         for (int i = 0; i < 15 - 4; i++)
         {
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < 15 - 4; j++)
             {
                 array<cell, 5> diag1;
-                for (int k = 0; k < 5; k++)
-                {
-                    diag1[k] = board[i + k][j + k];
-                }
-                count += _analize_chunk(diag1);
-            }
-        }
-        for (int i = 0; i < 15 - 4; i++)
-        {
-            for (int j = 15 - 1; j >= 4; j--)
-            {
                 array<cell, 5> diag2;
                 for (int k = 0; k < 5; k++)
                 {
-                    diag2[k] = board[i + k][j - k];
+                    diag1[k] = board[i + k][j + k];
+                    diag2[k] = board[i + k][j + 4 - k];
                 }
+                count += _analize_chunk(diag1);
                 count += _analize_chunk(diag2);
             }
         }
