@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
         cin >> opponent_move;
         board.make_move(opponent_move, opponent);
         is_first = true;
-        // mid_debut = false;
+        mid_debut = false;
         board.print();
         cout << endl;
     }
